@@ -26,6 +26,7 @@ app.get('/api/status', (req, res) => {
   });
 });
 
+app.use('/images', express.static('images'));
 
 app.use('/api/users', userRoutes);
 
