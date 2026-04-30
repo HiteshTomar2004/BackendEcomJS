@@ -2,8 +2,13 @@ import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
+import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
 
-const prisma = new PrismaClient();
+const adapter = new PrismaBetterSqlite3({
+  url: process.env.DATABASE_URL || "file:./dev.db",//for server side 
+});
+
+const prisma = new PrismaClient({ adapter });
 const app = express();
 const PORT = process.env.PORT || 3000;
 
