@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
 import { prisma } from './config/db.js'
+import productRoutes from './routes/products.js'
+import userRoutes from './routes/users.js'
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,27 +27,9 @@ app.get('/api/status', (req, res) => {
 });
 
 
-app.get('/api/users', async (req, res) => {
-  try {
-    const users = await prisma.user.findMany();
-    res.status(200).json({ success: true, data: users });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
+app.use('/api/users', userRoutes);
 
-
-app.post('/api/users', async (req, res) => {
-  try {
-    const { email, name } = req.body;
-    const user = await prisma.user.create({
-      data: { email, name }
-    });
-    res.status(201).json({ success: true, data: user });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
+app.use('/api/products', productRoutes);
 
 app.use((req, res) => {
   res.status(404).json({
