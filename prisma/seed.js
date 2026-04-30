@@ -12,7 +12,7 @@ export const prisma = new PrismaClient({ adapter });
 async function main() {
   console.log('Reading products.json...');
   
-  const data = fs.readFileSync(path.resolve('../defaultProducts/defaultProducts.js'), 'utf-8');
+  const data = fs.readFileSync(path.resolve('./default-Data/defaultProducts.js'), 'utf-8');
   const products = JSON.parse(data);
 
   console.log(`Found ${products.length} products. Seeding database...`);
@@ -35,7 +35,7 @@ async function main() {
     });
   }
 
-  console.log('✅ Seeding finished successfully!');
+  console.log('Seeding finished successfully!');
 }
 
 main()
