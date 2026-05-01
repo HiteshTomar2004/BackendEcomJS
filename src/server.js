@@ -4,6 +4,7 @@ import 'dotenv/config';
 import { prisma } from './config/db.js'
 import productRoutes from './routes/products.js'
 import userRoutes from './routes/users.js'
+import deliveryOptionsRoutes from './routes/deliveryOptions.js'
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -31,6 +32,8 @@ app.use('/images', express.static('images'));
 app.use('/api/users', userRoutes);
 
 app.use('/api/products', productRoutes);
+
+app.use('/api/deliveryOptions', deliveryOptionsRoutes)
 
 app.use((req, res) => {
   res.status(404).json({

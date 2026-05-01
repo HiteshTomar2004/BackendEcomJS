@@ -35,3 +35,9 @@ model Keyword {
 
   products Product[]
 }
+
+model DeliveryOption {
+  id String @id
+  deliveryDays Int
+  priceCents Int
+}
