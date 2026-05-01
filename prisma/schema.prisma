@@ -28,6 +28,7 @@ model Product{
 
   keywords Keyword []
   cartItems CartItem []
+  orderItem OrderItem []
 }
 
 model Keyword {
@@ -69,4 +70,27 @@ model CartItem {
   deliveryOption DeliveryOption @relation(fields: [deliveryOptionId], references: [id])
 
   @@unique([cartId,productId]) //so multiple quantities of same product dont show up twice as two rows
+}
+
+model Order {
+  id String @id @default(uuid())
+  totalCostCents Int
+  createdAt DateTime @default(now())
+
+  orderItem OrderItem []
+}
+
+model OrderItem {
+  id String @id @default(uuid())
+  
+  //saved here so if delivery times are updated in future it wont affect historical delivery times
+  quantity Int
+  estimatedDeliveryTime DateTime
+
+  orderId String
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  productId String
+  product Product @relation(fields: [productId], references: [id])
+
 }
