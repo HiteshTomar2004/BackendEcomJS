@@ -1,0 +1,10 @@
+$kind: http-request
+name: Get All Products
+method: GET
+url: '{{baseURL}}/api/products'
+order: 1000
+queryParams:
+  - key: search
+    value: ''
+    description: 'Optional search term to filter products by name or keyword'
+    disabled: true

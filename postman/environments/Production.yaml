@@ -1,0 +1,6 @@
+name: Production
+values:
+  - key: baseURL
+    value: 'https://www.postman-echo.com'
+    enabled: true
+    type: default

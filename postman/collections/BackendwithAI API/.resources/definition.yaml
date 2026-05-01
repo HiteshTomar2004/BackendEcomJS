@@ -1,0 +1,15 @@
+$kind: collection
+name: BackendwithAI API
+description: |-
+  API collection for the BackendwithAI e-commerce backend.
+  Base URL: http://localhost:3000
+
+  Resources:
+  - Products: Manage product catalog
+  - Users: Manage users
+  - Cart: Manage shopping cart
+  - Delivery Options: Retrieve delivery options
+variables:
+  - key: baseURL
+    value: 'http://localhost:3000'
+    description: Base URL for the API server

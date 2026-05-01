@@ -1,0 +1,4 @@
+$kind: collection
+name: Products
+description: Endpoints for managing the product catalog.
+order: 2000

@@ -1,0 +1,10 @@
+$kind: http-request
+name: Get Delivery Options
+method: GET
+url: '{{baseURL}}/api/deliveryOptions'
+order: 1000
+queryParams:
+  - key: expand
+    value: estimatedDeliveryTime
+    description: 'Pass "estimatedDeliveryTime" to include estimated delivery timestamps in the response'
+    disabled: true

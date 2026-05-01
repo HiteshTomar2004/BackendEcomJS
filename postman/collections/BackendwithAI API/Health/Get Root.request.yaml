@@ -1,0 +1,5 @@
+$kind: http-request
+name: Get Root
+method: GET
+url: '{{baseURL}}/'
+order: 1000

@@ -1,0 +1,9 @@
+$kind: http-request
+name: Get Cart
+method: GET
+url: '{{baseURL}}/api/cart/{{cartId}}'
+order: 1000
+pathVariables:
+  - key: cartId
+    value: ''
+    description: 'The unique ID of the cart'

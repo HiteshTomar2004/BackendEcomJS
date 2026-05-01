@@ -1,0 +1,4 @@
+$kind: collection
+name: Delivery Options
+description: Endpoints for retrieving delivery options.
+order: 5000

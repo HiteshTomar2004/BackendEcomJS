@@ -1,0 +1,4 @@
+$kind: collection
+name: Cart
+description: Endpoints for managing the shopping cart.
+order: 4000

@@ -1,0 +1,21 @@
+$kind: http-request
+name: Update Cart Item
+method: PUT
+url: '{{baseURL}}/api/cart/{{cartId}}/items/{{productId}}'
+order: 4000
+headers:
+  - key: Content-Type
+    value: application/json
+pathVariables:
+  - key: cartId
+    value: ''
+    description: 'The unique ID of the cart'
+  - key: productId
+    value: ''
+    description: 'The unique ID of the product to update'
+body:
+  type: json
+  content: |-
+    {
+      "quantity": 3
+    }
