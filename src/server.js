@@ -5,6 +5,7 @@ import { prisma } from './config/db.js'
 import productRoutes from './routes/products.js'
 import userRoutes from './routes/users.js'
 import deliveryOptionsRoutes from './routes/deliveryOptions.js'
+import getCartRoutes from './routes/cart.js'
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -33,7 +34,9 @@ app.use('/api/users', userRoutes);
 
 app.use('/api/products', productRoutes);
 
-app.use('/api/deliveryOptions', deliveryOptionsRoutes)
+app.use('/api/deliveryOptions', deliveryOptionsRoutes);
+
+app.use('/api/cart',getCartRoutes);
 
 app.use((req, res) => {
   res.status(404).json({
