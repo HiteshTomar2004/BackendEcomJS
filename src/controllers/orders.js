@@ -37,6 +37,9 @@ export const placeOrders = async(req, res) => {
                 estimatedDeliveryTime: new Date(deliveryDateMs) // conversion to native date 
             })
         }
+        //adding tax
+        const estimatedTaxCents = Math.round(finalTotalCents*0.10);
+        finalTotalCents += estimatedTaxCents;
 
         //Transaction / Order Creation
         const newOrder = await prisma.order.create({
