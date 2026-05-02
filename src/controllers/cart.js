@@ -1,4 +1,5 @@
 import { prisma } from '../config/db.js'
+import { calculateOrderTotals } from '../utils/calculateTotals.js';
 
 export const getCart = async(req,res) => {
     try{
@@ -124,4 +125,36 @@ export const updateCart = async(req,res)=>{
         }
         res.status(500).json({success:false, error: error.message});
     }
+};
+
+export const paymentSummaryDetails = async(req,res)=>{
+    try{
+        const {cartId} = req.params;
+
+        //extract cart details
+        const cart = await prisma.cart.findUnique({
+            where: {id: cartId},
+            include:{
+                cartItems:{
+                    include:{
+                        product: true,
+                        deliveryOption: true
+                    }
+                }
+            }
+        });
+
+        if(!cart || cart.cartItems.length === 0){
+            return res.status(404).json({success:false, message:"cart is empty"});
+        }
+
+        const totals = calculateOrderTotals(cart.cartItems);
+
+        res.status(200).json({
+            success:true,
+            data: totals
+        });
+    }catch(error){
+        res.status(500).json({success:false, error: error.message});
+    };
 };

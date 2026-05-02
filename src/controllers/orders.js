@@ -1,4 +1,5 @@
 import {prisma} from '../config/db.js'
+import { calculateOrderTotals } from '../utils/calculateTotals.js';
 
 export const placeOrders = async(req, res) => {
     try{
@@ -22,29 +23,24 @@ export const placeOrders = async(req, res) => {
         }
 
         //Order Items array
-        let finalTotalCents = 0;
+        const totals = calculateOrderTotals(cart.cartItems);
         const orderItemsToCreate = [];
 
         for(const item of cart.cartItems){
-            const itemTotal= (item.product.priceCents*item.quantity) + item.deliveryOption.priceCents;
-            finalTotalCents += itemTotal;
-            
+           
             const deliveryDateMs = Date.now() + (item.deliveryOption.deliveryDays * 24*60*60*1000);
 
             orderItemsToCreate.push({
                 productId: item.productId,
                 quantity: item.quantity,
                 estimatedDeliveryTime: new Date(deliveryDateMs) // conversion to native date 
-            })
+            });
         }
-        //adding tax
-        const estimatedTaxCents = Math.round(finalTotalCents*0.10);
-        finalTotalCents += estimatedTaxCents;
 
         //Transaction / Order Creation
         const newOrder = await prisma.order.create({
             data:{
-                totalCostCents: finalTotalCents,
+                totalCostCents: totals.totalCostCents,
                 orderItem: {
                     create: orderItemsToCreate//adds an orderid to every cartitem prisma's nested writes
                 }
