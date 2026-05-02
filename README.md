@@ -57,18 +57,36 @@ Make sure you have [Node.js](https://nodejs.org/) installed.
 
 ##  API Endpoints
 
-### Cart & Checkout
+### Products & Catalog
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
-| `GET` | `/api/cart/:cartId/summary` | Returns a secure math preview of the cart (Subtotal, Taxes, Dynamic Shipping). |
+| `GET` | `/api/products` | Retrieves all products. Supports query parameters for case-insensitive search and keyword filtering. |
+| `GET` | `/api/products/:productId`| Retrieves details for a single specific product. |
+
+### Delivery Options
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/api/delivery-options` | Retrieves all available shipping methods, estimated delivery days, and base costs. |
+
+### Cart Management
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/api/cart/:cartId` | Retrieves the current active cart and all populated cart items. |
+| `POST` | `/api/cart/items` | Adds a new product to the cart. Expects `{ "cartId", "productId", "quantity" }`. |
+| `PUT` | `/api/cart/items/:itemId` | Updates the quantity or selected delivery option of an existing cart item. |
+| `DELETE` | `/api/cart/items/:itemId` | Removes a specific item from the active cart. |
+
+### Checkout & Payment
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/api/cart/:cartId/summary`| Returns a secure math preview of the cart (Subtotal, Taxes, Dynamic Shipping). |
 | `POST` | `/api/orders` | The Checkout Route. Securely calculates totals, processes the database transaction, and deletes the active cart. Expects `{ "cartId": "uuid" }`. |
 
-### Order History
+### dOrder History
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
 | `GET` | `/api/orders` | Retrieves a list of all historical orders, sorted by newest first. Includes hydrated product data. |
 | `GET` | `/api/orders/:orderId` | Retrieves a specific, detailed order receipt including exact delivery dates and historical prices. |
-
 ---
 
 ## Database Schema Overview
