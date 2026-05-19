@@ -7,12 +7,18 @@ import userRoutes from './routes/users.js';
 import deliveryOptionsRoutes from './routes/deliveryOptions.js';
 import cartRoutes from './routes/cart.js';
 import ordersRoutes from './routes/orders.js';
+import cookieParser from 'cookie-parser';
+import auth from './routes/auth.js'
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
 app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
@@ -40,6 +46,8 @@ app.use('/api/deliveryOptions', deliveryOptionsRoutes);
 app.use('/api/cart', cartRoutes);
 
 app.use('/api/orders',ordersRoutes);
+
+app.use('./api/auth', auth);
 
 app.use((req, res) => {
   res.status(404).json({
