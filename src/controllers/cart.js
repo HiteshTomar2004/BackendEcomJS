@@ -21,6 +21,9 @@ export const getCart = async(req,res) => {
         if(!cart){
             return res.status(404).json({success:true, message:"Cart not found"});
         }
+        if(cart.userId && (!req.user || req.user.id !== cart.userId)){
+            return res.status(403).json({success: false, message: "Unauthorized to view this cart"});
+        }
 
         res.status(200).json({success:true, data: cart});
 
@@ -34,8 +37,19 @@ export const addToCart = async(req,res) => {
         let {cartId, productId, quantity, deliveryOptionId} = req.body;
 
         if(!cartId){
-            const newCart = await prisma.cart.create({ data: {} });
-            cartId = newCart.id;
+            if(req.user) {
+                const existingUserCart = await prisma.cart.findFirst({where: {userId: req.user.id}});
+                
+                if(existingUserCart) {
+                    cartId = existingUserCart.id;
+                }else{
+                    const newCart = await prisma.cart.create({ data: { userId: req.user.id} });
+                    cartId = newCart.id;
+                }
+            }else{
+                const newCart = await prisma.cart.create({ data: {} });
+                cartId = newCart.id;
+            }
         }
         const cartItem = await prisma.cartItem.upsert({
             where:{
@@ -106,7 +120,7 @@ export const updateCart = async(req,res)=>{
             return res.status(200).json({success: true, message:"removed item from cart"});
         }
 
-        const updatedItem = prisma.cartItem.update({
+        const updatedItem = await prisma.cartItem.update({
             where: {
                 cartId_productId:{
                     cartId: cartId,
@@ -146,6 +160,10 @@ export const paymentSummaryDetails = async(req,res)=>{
 
         if(!cart || cart.cartItems.length === 0){
             return res.status(404).json({success:false, message:"cart is empty"});
+        }
+
+        if (cart.userId && (!req.user || req.user.id !== cart.userId)) {
+            return res.status(403).json({ success: false, message: "Unauthorized acesss to view cart"});
         }
 
         const totals = calculateOrderTotals(cart.cartItems);

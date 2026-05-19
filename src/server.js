@@ -3,7 +3,6 @@ import cors from 'cors';
 import 'dotenv/config';
 import { prisma } from './config/db.js';
 import productRoutes from './routes/products.js';
-import userRoutes from './routes/users.js';
 import deliveryOptionsRoutes from './routes/deliveryOptions.js';
 import cartRoutes from './routes/cart.js';
 import ordersRoutes from './routes/orders.js';
@@ -37,8 +36,6 @@ app.get('/api/status', (req, res) => {
 
 app.use('/images', express.static('images'));
 
-app.use('/api/users', userRoutes);
-
 app.use('/api/products', productRoutes);
 
 app.use('/api/deliveryOptions', deliveryOptionsRoutes);
@@ -47,7 +44,7 @@ app.use('/api/cart', cartRoutes);
 
 app.use('/api/orders' ,ordersRoutes);
 
-app.use('./api/auth', auth);
+app.use('/api/auth', auth);
 
 app.use((req, res) => {
   res.status(404).json({
