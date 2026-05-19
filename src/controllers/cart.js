@@ -36,6 +36,13 @@ export const addToCart = async(req,res) => {
     try{
         let {cartId, productId, quantity, deliveryOptionId} = req.body;
 
+        if (!quantity || quantity <= 0 || !Number.isInteger(quantity)) {
+            return res.status(400).json({ 
+                success: false, 
+                message: "Nice try. Quantity must be at least 1." 
+            });
+        }
+
         if(!cartId){
             if(req.user) {
                 const existingUserCart = await prisma.cart.findFirst({where: {userId: req.user.id}});
