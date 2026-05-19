@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 const generateTokenAndSetCookie = (res, id, version) =>{
-    const token = jwt.sign({ id, version}, process.ENV.JWT_SECRET , { expiresIn: '30d'});
+    const token = jwt.sign({ id, version}, process.env.JWT_SECRET , { expiresIn: '30d'});
     res.cookie('jwt', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV !== 'development',
