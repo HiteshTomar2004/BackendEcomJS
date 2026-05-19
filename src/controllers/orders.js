@@ -41,6 +41,7 @@ export const placeOrders = async(req, res) => {
         const newOrder = await prisma.order.create({
             data:{
                 totalCostCents: totals.totalCostCents,
+                userId: req.user ? req.user.id : undefined,
                 orderItem: {
                     create: orderItemsToCreate//adds an orderid to every cartitem prisma's nested writes
                 }
@@ -69,7 +70,11 @@ export const placeOrders = async(req, res) => {
 
 export const getAllOrders = async (req, res) => {
     try{
+        if(!req.user){
+            return res.status(401).json({success:false, message:"Must be logged in to view order history"});
+        }
         const orders = await prisma.order.findMany({
+            where:{ userId: req.user.id },
             orderBy: {//sort by newest descending
                 createdAt : 'desc'
             },
