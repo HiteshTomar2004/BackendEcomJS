@@ -9,6 +9,7 @@ import cartRoutes from './routes/cart.js';
 import ordersRoutes from './routes/orders.js';
 import cookieParser from 'cookie-parser';
 import auth from './routes/auth.js'
+import { protect } from './middleware/authMiddleware.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -45,7 +46,7 @@ app.use('/api/deliveryOptions', deliveryOptionsRoutes);
 
 app.use('/api/cart', cartRoutes);
 
-app.use('/api/orders',ordersRoutes);
+app.use('/api/orders', protect ,ordersRoutes);
 
 app.use('./api/auth', auth);
 
