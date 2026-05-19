@@ -22,6 +22,10 @@ export const placeOrders = async(req, res) => {
             return res.status(404).json({success:false, message:"No items in cart"})
         }
 
+        if(cart.userId && (!req.user || req.user.id !== cart.userId)){
+            return res.status(403).json({success:false, message:"Unauthorized to checkout this cart"});
+        }
+
         //Order Items array
         const totals = calculateOrderTotals(cart.cartItems);
         const orderItemsToCreate = [];
@@ -37,26 +41,29 @@ export const placeOrders = async(req, res) => {
             });
         }
 
-        //Transaction / Order Creation
-        const newOrder = await prisma.order.create({
-            data:{
-                totalCostCents: totals.totalCostCents,
-                userId: req.user ? req.user.id : undefined,
-                orderItem: {
-                    create: orderItemsToCreate//adds an orderid to every cartitem prisma's nested writes
-                }
-            },
-            include: {
-                orderItem: {
-                    include:{
-                        product: true,
+        const newOrder = await prisma.$transaction(async (tx) => {
+            const order = await tx.order.create({
+                data:{
+                    totalCostCents: totals.totalCostCents,
+                    userId: req.user ? req.user.id : undefined,
+                    orderItem: {
+                        create: orderItemsToCreate//adds an orderid to every cartitem prisma's nested writes
+                    }
+                },
+                include: {
+                    orderItem: {
+                        include:{
+                            product: true,
+                        }
                     }
                 }
-            }
-        });
+            });
 
-        await prisma.cart.delete({
-            where: { id: cartId }
+            await tx.cart.delete({
+                where: { id: cartId }
+            });
+
+            return order;
         });
 
         res.status(201).json({
@@ -97,8 +104,15 @@ export const getOrderById = async(req,res) =>{
     try{
         const {orderId} = req.params;
 
-        const orderById = await prisma.order.findUnique({
-            where: {id: orderId},
+        if(!req.user){
+            return res.status(401).json({success:false, message:"Must be logged in to view this order"});
+        }
+
+        const orderById = await prisma.order.findFirst({
+            where: {
+                id: orderId,
+                userId: req.user.id
+            },
             include:{
                 orderItem:{
                     include:{

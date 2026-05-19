@@ -96,6 +96,7 @@ PORT=3000
 JWT_SECRET="replace_with_a_long_random_secret"
 NODE_ENV="development"
 REQUIRE_AUTH="true"
+CLIENT_ORIGIN="http://localhost:5173"
 ```
 
 3. Run database migrations:
@@ -131,6 +132,7 @@ http://localhost:3000
 | `JWT_SECRET` | Yes | None | Secret used to sign and verify JWT session cookies. |
 | `NODE_ENV` | No | None | Use `development` locally. Cookies are marked secure when this is not `development`. |
 | `REQUIRE_AUTH` | No | `true` behavior | Set to `false` to bypass protected auth middleware during local testing. |
+| `CLIENT_ORIGIN` | No | `http://localhost:5173` | Frontend origin allowed by CORS when sending cookies. |
 
 ## Database and Seeding
 
@@ -362,7 +364,7 @@ Stores completed checkout records. Orders can belong to a user and contain purch
 ## Development Notes
 
 - The API serves static files from `/images`.
-- CORS currently allows `http://localhost:5173` with credentials enabled.
+- CORS allows `CLIENT_ORIGIN` with credentials enabled.
 - Use `credentials: "include"` on frontend requests that need login state.
 - Keep `JWT_SECRET` private and use a strong value outside local development.
 - The `postman` directory contains request definitions that can help with manual testing.

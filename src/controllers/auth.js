@@ -67,7 +67,12 @@ export const loginUser = async (req, res) => {
 };
 
 export const logoutUser = async(req, res)=>{
-    res.cookie('jwt','', {htppOnly: true, expiresIn: new Date(0) });
+    res.cookie('jwt','', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV !== 'development',
+        sameSite: 'strict',
+        expires: new Date(0)
+    });
     res.status(200).json({success:true, message: "logged out of this device"});
 };
 
@@ -76,7 +81,12 @@ export const logoutAllDevices = async(req,res)=> {
         where: { id: req.user.id},
         data: { tokenVersion: {increment: 1} }
     });
-    res.cookie('jwt', '', {httpOnly:true, expires: new Date(0)});
+    res.cookie('jwt', '', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV !== 'development',
+        sameSite: 'strict',
+        expires: new Date(0)
+    });
     res.status(200).json({success: true, message: "logged out everywhere"});
 };
 
