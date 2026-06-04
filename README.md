@@ -1,5 +1,8 @@
 # E-Commerce Backend API
 
+## Note:
+The frontend code for this library lies in: https://github.com/HiteshTomar2004/React-ecommerce-frontend/tree/main/ecommerce-project
+
 A Node.js, Express, Prisma, and SQLite backend for an e-commerce application. The API supports product catalog browsing, delivery options, guest and authenticated carts, secure checkout calculations, order history, and cookie-based authentication.
 
 ## Table of Contents
